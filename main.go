@@ -18,6 +18,8 @@ package main
 
 import (
 	"github.com/gliderlabs/ssh"
+	"github.com/judwhite/go-svc"
+	"log"
 )
 
 // The following variables can be set via ldflags
@@ -32,6 +34,11 @@ var (
 	BPORT         = "8888"
 	NOCLI         = ""
 )
+
+type program struct {
+	p      *params
+	server ssh.Server
+}
 
 func main() {
 	var (
@@ -58,6 +65,12 @@ func main() {
 			},
 		}
 	)
+	prg := &program{
+		p:      p,
+		server: server,
+	}
 
-	run(p, server)
+	if err := svc.Run(prg); err != nil {
+		log.Fatal(err)
+	}
 }
